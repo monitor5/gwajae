@@ -20,7 +20,7 @@ const translations = {
         '구글 계정으로 로그인해서 과제와 첨부파일을 관리해요. 허용된 이메일만 들어올 수 있고, 관리자 계정은 별도의 관리자 공간도 사용할 수 있습니다.',
       setupTitle: '처음 한 번만 필요해요',
       setupDescription:
-        '`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`를 설정하고 `supabase/setup.sql`을 실행해 주세요.',
+        '`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_GEMINI_API_KEY`를 설정하고 `supabase/setup.sql`을 실행해 주세요.',
       unauthorizedTitle: '로그인은 되었지만 아직 허용되지 않은 계정입니다.',
       unauthorizedDefault: '관리자 페이지에서 이 이메일을 허용 목록에 추가해 주세요.',
     },
@@ -191,7 +191,7 @@ const translations = {
         'Sign in with Google to manage assignments and attachments. Only authorized emails can access the app, and admin accounts get a dedicated admin space.',
       setupTitle: 'One-time setup required',
       setupDescription:
-        'Set `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` and run `supabase/setup.sql`.',
+        'Set `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_GEMINI_API_KEY` and run `supabase/setup.sql`.',
       unauthorizedTitle: 'Signed in, but not yet authorized.',
       unauthorizedDefault: 'Ask the admin to add your email to the allowed list.',
     },

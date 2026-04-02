@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useI18n } from '../../i18n/useI18n'
-import { recognizeImage, parseAssignmentText } from '../../lib/ocrParser'
+import { scanScreenshot } from '../../lib/ocrParser'
 import type { Assignment, AssignmentAsset, Subject } from '../../types'
 import type { AssignmentFormInput } from '../../lib/assignments'
 import styles from './NewAssignmentModal.module.css'
@@ -181,13 +181,33 @@ export function NewAssignmentModal({
 
   const handleDismissToast = useCallback(() => setToastMessage(null), [])
 
+  function applyScannedDueDate(dueDate?: string) {
+    if (!dueDate) return
+
+    // Expect: YYYY-MM-DDTHH:mm (no timezone). Be defensive.
+    const match = dueDate.match(/(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})/)
+    if (!match) return
+
+    const [, datePart, hh, mm] = match
+    const hour24 = Number(hh)
+    if (Number.isNaN(hour24)) return
+
+    const minute = mm
+    const mer = hour24 >= 12 ? 'PM' : 'AM'
+    const hour12 = hour24 % 12 || 12
+
+    setDateValue(datePart)
+    setHourValue(String(hour12))
+    setMinuteValue(minute)
+    setMeridiem(mer)
+  }
+
   async function handleScreenshotScan(file: File) {
     setIsScanning(true)
     setError(null)
 
     try {
-      const ocrText = await recognizeImage(file)
-      const parsed = parseAssignmentText(ocrText)
+      const parsed = await scanScreenshot(file)
 
       const hasAnyData = parsed.title || parsed.dueDate || parsed.description || parsed.externalLink
       if (!hasAnyData) {
@@ -197,7 +217,7 @@ export function NewAssignmentModal({
       }
 
       if (parsed.title) setTitle(parsed.title)
-      if (parsed.dueDate) setDueDate(parsed.dueDate)
+      if (parsed.dueDate) applyScannedDueDate(parsed.dueDate)
       if (parsed.description) setDescription(parsed.description)
       if (parsed.externalLink) setExternalLink(parsed.externalLink)
 

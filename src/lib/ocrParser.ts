@@ -1,115 +1,153 @@
-import Tesseract from 'tesseract.js'
-
 export interface ParsedAssignment {
   title?: string
-  dueDate?: string
+  dueDate?: string // ISO-like: YYYY-MM-DDTHH:mm
   description?: string
   externalLink?: string
 }
 
-export async function recognizeImage(file: File): Promise<string> {
-  const { data } = await Tesseract.recognize(file, 'kor+eng', {
-    logger: () => {},
+const GEMINI_MODEL = 'gemini-3.1-flash-lite-preview'
+
+const SYSTEM_PROMPT = `You are an assignment information extractor.
+Given a screenshot of a university assignment page (Korean or English), extract ONLY the following fields and return ONLY valid JSON (no markdown):
+{
+  "title": "과제 제목 (string or null)",
+  "dueDate": "마감일시 ISO format YYYY-MM-DDTHH:mm (string or null). If a range is given, use the END date/time.",
+  "description": "과제 설명/내용/주의사항 (string or null). Include submission instructions if present.",
+  "externalLink": "외부 링크/URL if any (string or null)"
+}
+
+Rules:
+- Always use the submission DEADLINE (end of a range), not the start.
+- Combine multi-line descriptions into a single string with newlines.
+- If a field cannot be found, set it to null.`
+
+function getApiKey(): string | undefined {
+  // Vite browser build
+  const viteKey = (import.meta as unknown as { env?: Record<string, unknown> }).env?.VITE_GEMINI_API_KEY
+  if (typeof viteKey === 'string' && viteKey.trim()) return viteKey
+
+  // Node/CLI tests
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const proc = (globalThis as any)?.process
+  const envKey = proc?.env?.VITE_GEMINI_API_KEY
+  if (typeof envKey === 'string' && envKey.trim()) return envKey
+
+  return undefined
+}
+
+async function fileToBase64(file: File): Promise<string> {
+  // Browser path
+  if (typeof FileReader !== 'undefined') {
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const result = reader.result as string
+        resolve(result.split(',')[1] ?? '')
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
+  }
+
+  // Node path (for local debug)
+  const nodeBuffer = (globalThis as unknown as { Buffer?: unknown }).Buffer as
+    | { from: (input: ArrayBuffer) => { toString: (encoding: string) => string } }
+    | undefined
+  if (nodeBuffer && file.arrayBuffer) {
+    const buf = nodeBuffer.from(await file.arrayBuffer())
+    return buf.toString('base64')
+  }
+
+  throw new Error('Cannot convert file to base64 in this runtime')
+}
+
+function cleanModelText(text: string) {
+  return text
+    .replace(/```json\s*/g, '')
+    .replace(/```/g, '')
+    .trim()
+}
+
+export async function scanScreenshot(file: File): Promise<ParsedAssignment> {
+  const apiKey = getApiKey()
+  if (!apiKey) {
+    throw new Error('VITE_GEMINI_API_KEY is not configured')
+  }
+
+  const base64 = await fileToBase64(file)
+  const mimeType = file.type || 'image/png'
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`
+
+  const debugEnabled =
+    Boolean((globalThis as unknown as { __DEBUG_OCR?: boolean }).__DEBUG_OCR) ||
+    Boolean((globalThis as unknown as { process?: { env?: { DEBUG_OCR?: unknown } } }).process?.env
+      ?.DEBUG_OCR)
+
+  const body = {
+    contents: [
+      {
+        parts: [
+          { text: SYSTEM_PROMPT },
+          {
+            inlineData: {
+              mimeType,
+              data: base64,
+            },
+          },
+        ],
+      },
+    ],
+    generationConfig: {
+      temperature: 0.1,
+      maxOutputTokens: 1024,
+    },
+  }
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
   })
-  return data.text
-}
 
-function extractUrl(text: string): string | undefined {
-  const urlPattern = /https?:\/\/[^\s,)}\]]+/i
-  const match = text.match(urlPattern)
-  return match?.[0]
-}
-
-function extractDueDate(text: string): string | undefined {
-  // "2026-04-10 23시59분" or "2026-04-10 23:59"
-  const isoLike = text.match(
-    /(\d{4})[-.\/](\d{1,2})[-.\/](\d{1,2})\s*(\d{1,2})\s*[시:]\s*(\d{1,2})\s*분?/,
-  )
-  if (isoLike) {
-    const [, y, m, d, h, min] = isoLike
-    return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}T${h.padStart(2, '0')}:${min.padStart(2, '0')}`
+  if (!response.ok) {
+    const errText = await response.text()
+    throw new Error(`Gemini API error ${response.status}: ${errText}`)
   }
 
-  // "4월 10일 23:59" style
-  const korDate = text.match(
-    /(\d{1,2})\s*월\s*(\d{1,2})\s*일\s*(\d{1,2})\s*[시:]\s*(\d{1,2})\s*분?/,
-  )
-  if (korDate) {
-    const currentYear = new Date().getFullYear()
-    const [, m, d, h, min] = korDate
-    return `${currentYear}-${m.padStart(2, '0')}-${d.padStart(2, '0')}T${h.padStart(2, '0')}:${min.padStart(2, '0')}`
+  const json = await response.json()
+  const text: string = json?.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+  const cleaned = cleanModelText(text)
+
+  if (debugEnabled) {
+    // Avoid logging payload (includes image base64 + API key in URL).
+    // Safe to print only the model text section.
+    // eslint-disable-next-line no-console
+    console.log('===== GEMINI RAW TEXT =====')
+    // eslint-disable-next-line no-console
+    console.log(text)
+    // eslint-disable-next-line no-console
+    console.log('===== GEMINI CLEANED JSON =====')
+    // eslint-disable-next-line no-console
+    console.log(cleaned)
   }
 
-  return undefined
-}
+  const parsed = JSON.parse(cleaned) as Record<string, unknown>
 
-function extractTitle(text: string): string | undefined {
-  const lines = text.split('\n').map((l) => l.trim()).filter(Boolean)
-
-  for (const line of lines) {
-    const titleMatch = line.match(/제\s*목\s+(.+)/i)
-    if (titleMatch) {
-      return titleMatch[1].trim()
-    }
-  }
-
-  return undefined
-}
-
-function extractDescription(text: string): string | undefined {
-  const lines = text.split('\n')
-  let capturing = false
-  const descLines: string[] = []
-
-  for (const line of lines) {
-    const trimmed = line.trim()
-
-    if (/내용\s*[/\/]\s*주의\s*사항|내용\/주의사항/i.test(trimmed)) {
-      capturing = true
-      continue
-    }
-
-    if (capturing) {
-      if (/^제출\s*양식|^제출양식|^첨부\s*파일|^첨부파일/i.test(trimmed)) {
-        break
-      }
-      if (trimmed) {
-        descLines.push(trimmed)
-      }
-    }
-  }
-
-  if (descLines.length > 0) {
-    return descLines.join('\n')
-  }
-
-  return undefined
-}
-
-export function parseAssignmentText(text: string): ParsedAssignment {
   const result: ParsedAssignment = {}
 
-  result.title = extractTitle(text)
-
-  const dueDates: string[] = []
-  const datePattern =
-    /(\d{4})[-.\/](\d{1,2})[-.\/](\d{1,2})\s*(\d{1,2})\s*[시:]\s*(\d{1,2})\s*분?/g
-  let match: RegExpExecArray | null
-  while ((match = datePattern.exec(text)) !== null) {
-    const [, y, m, d, h, min] = match
-    dueDates.push(
-      `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}T${h.padStart(2, '0')}:${min.padStart(2, '0')}`,
-    )
+  if (typeof parsed.title === 'string' && parsed.title.trim()) {
+    result.title = parsed.title.trim()
   }
-  // Use the last date (end of submission period)
-  if (dueDates.length > 0) {
-    result.dueDate = dueDates[dueDates.length - 1]
-  } else {
-    result.dueDate = extractDueDate(text)
+  if (typeof parsed.dueDate === 'string' && parsed.dueDate.trim()) {
+    // Keep as-is (caller will map into date+time parts)
+    result.dueDate = parsed.dueDate.trim()
   }
-
-  result.externalLink = extractUrl(text)
-  result.description = extractDescription(text)
+  if (typeof parsed.description === 'string' && parsed.description.trim()) {
+    result.description = parsed.description.trim()
+  }
+  if (typeof parsed.externalLink === 'string' && parsed.externalLink.trim()) {
+    result.externalLink = parsed.externalLink.trim()
+  }
 
   return result
 }
