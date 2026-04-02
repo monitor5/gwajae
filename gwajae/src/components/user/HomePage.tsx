@@ -274,6 +274,16 @@ export function HomePage() {
         {storageError ? (
           <p className={styles.helperText}>{t.home.storageNote}</p>
         ) : null}
+
+        <section className={styles.tipCard}>
+          <svg className={styles.tipIcon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path d="M4 4h3V2H3a1 1 0 00-1 1v4h2V4zm13-2h-4v2h3v3h2V3a1 1 0 00-1-1zM4 13H2v4a1 1 0 001 1h4v-2H4v-3zm14 0h-2v3h-3v2h4a1 1 0 001-1v-4zM6 6h8v8H6V6z" />
+          </svg>
+          <div>
+            <strong className={styles.tipTitle}>{t.home.featureTipTitle}</strong>
+            <p className={styles.tipDescription}>{t.home.featureTipDescription}</p>
+          </div>
+        </section>
       </div>
 
       <section className={`${styles.panel} ${styles.tallPanel}`}>
