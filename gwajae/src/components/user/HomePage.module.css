@@ -1,0 +1,286 @@
+.grid {
+  display: grid;
+  grid-template-columns: 0.78fr 1.42fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.leftColumn {
+  display: grid;
+  gap: 1rem;
+}
+
+.card,
+.panel {
+  border-radius: 1.6rem;
+  background: var(--color-bg-card);
+  box-shadow:
+    0 18px 42px var(--color-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  transition:
+    background var(--transition-medium),
+    box-shadow var(--transition-medium),
+    transform var(--transition-fast);
+}
+
+.card:hover,
+.panel:hover {
+  box-shadow:
+    0 22px 48px var(--color-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.card {
+  padding: 1.35rem 1.1rem 1.05rem;
+  animation: fadeInUp 500ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.panel {
+  padding: 1.25rem 1rem;
+  animation: fadeInUp 500ms cubic-bezier(0.4, 0, 0.2, 1) 100ms both;
+}
+
+.tallPanel {
+  grid-row: span 2;
+}
+
+.bottomPanel {
+  grid-column: 2;
+  animation-delay: 200ms;
+}
+
+.cardTitle,
+.panelTitle {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.progressRing {
+  --progress-angle: 244deg;
+
+  width: 7.5rem;
+  height: 7.5rem;
+  margin: 0.6rem auto 1rem;
+  border-radius: 50%;
+  background: conic-gradient(var(--color-progress-fill) var(--progress-angle), var(--color-progress-track) 0deg);
+  position: relative;
+  display: grid;
+  place-items: center;
+  transition: background 600ms ease;
+}
+
+.progressRing::before {
+  content: '';
+  position: absolute;
+  inset: 0.62rem;
+  border-radius: 50%;
+  background: var(--color-progress-inner-bg);
+  transition: background var(--transition-medium);
+}
+
+.progressInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.1rem;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.progressInner strong {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.progressInner span,
+.usageLabel,
+.assignmentDetail {
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+}
+
+.barTrack {
+  overflow: hidden;
+  height: 0.28rem;
+  margin: 0.7rem 0 0.65rem;
+  border-radius: 999px;
+  background: var(--color-bar-track);
+  transition: background var(--transition-medium);
+}
+
+.barFill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-progress-fill);
+  animation: progressGrow 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  transition: background var(--transition-medium);
+}
+
+.panelHeader {
+  margin-bottom: 0.5rem;
+}
+
+.panelColumns {
+  display: grid;
+  grid-template-columns: 5rem 1fr 4rem 3rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0.5rem 0;
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.assignmentRow {
+  display: grid;
+  grid-template-columns: 5rem 1fr 4rem 3rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 0.5rem;
+  border-top: 1px solid var(--color-border-row);
+  animation: fadeInUp 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  transition: background var(--transition-fast);
+}
+
+.assignmentRow:first-child {
+  border-top: none;
+}
+
+.assignmentRow:hover {
+  background: var(--color-bg-hover);
+  border-radius: 1rem;
+}
+
+.subjectCell {}
+
+.subjectPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4rem;
+  padding: 0.24rem 0.5rem;
+  border-radius: 999px;
+  color: var(--color-pill-text);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.contentCell {
+  min-width: 0;
+}
+
+.assignmentName {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.assignmentDetail {
+  margin-top: 0.18rem;
+}
+
+.ddayCell {
+  text-align: center;
+}
+
+.ddayBadge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.actionCell {
+  display: flex;
+  justify-content: center;
+}
+
+.emptyRow {
+  padding: 1.5rem 0.5rem;
+}
+
+.statusButton {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.statusButton:hover {
+  transform: scale(1.15);
+}
+
+.statusCircle {
+  display: inline-grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border: 1.5px solid var(--color-text-faint);
+  border-radius: 50%;
+  color: transparent;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.statusDone {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  font-size: 0.8rem;
+}
+
+.pinBadge {
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  line-height: 1;
+  color: var(--color-favorite-muted);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.pinBadgeActive {
+  color: var(--color-favorite);
+}
+
+.pinBadge svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.helperText {
+  margin: -0.2rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tallPanel,
+  .bottomPanel {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}

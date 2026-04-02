@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Serif+KR:wght@600;700&display=swap');
+
+html {
+  font-size: 16px;
+}
+
+:root {
+  --font-body: 'Noto Sans KR', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Noto Serif KR', Georgia, serif;
+
+  --color-primary: #58718a;
+  --color-primary-deep: #3f5d78;
+  --color-primary-light: #5f7891;
+  --color-text: #58718a;
+  --color-text-secondary: #7f95a8;
+  --color-text-muted: #98a8b7;
+  --color-text-faint: #8ea0b0;
+  --color-text-strong: #264056;
+
+  --color-bg-page: transparent;
+  --color-bg-card: rgba(255, 255, 255, 0.75);
+  --color-bg-card-solid: rgba(255, 255, 255, 0.96);
+  --color-bg-input: #ffffff;
+  --color-bg-hover: rgba(255, 255, 255, 0.88);
+  --color-bg-section: rgba(251, 252, 253, 0.8);
+
+  --color-border: rgba(228, 236, 241, 0.9);
+  --color-border-row: rgba(147, 163, 178, 0.14);
+  --color-border-input: #e7edf1;
+  --color-border-dashed: #d7e0e7;
+
+  --color-shadow: rgba(138, 152, 171, 0.12);
+  --color-shadow-button: rgba(88, 113, 138, 0.24);
+  --color-shadow-deep: rgba(93, 107, 120, 0.24);
+  --color-overlay: rgba(149, 159, 172, 0.36);
+
+  --color-tab-bg: rgba(255, 255, 255, 0.78);
+  --color-tab-active-bg: #58748b;
+  --color-tab-active-text: #ffffff;
+  --color-tab-text: #5f7891;
+
+  --color-progress-track: #dbe3ea;
+  --color-progress-fill: #57718a;
+  --color-progress-inner-bg: rgba(255, 255, 255, 0.96);
+
+  --color-badge-admin: #b9e4dc;
+  --color-badge-member: #e2e8ee;
+  --color-status-active: #2fb156;
+  --color-status-inactive: #b9c6d1;
+  --color-favorite: #f1c43a;
+  --color-favorite-muted: #d0dbe3;
+  --color-error: #b15d5d;
+  --color-warning-bg: rgba(255, 243, 232, 0.92);
+  --color-warning-text: #8a6a52;
+  --color-info-bg: rgba(247, 250, 252, 0.88);
+  --color-delete-muted: #c8d1da;
+
+  --color-pill-text: #59728a;
+  --color-bar-track: #e7ebef;
+
+  --bg-page:
+    radial-gradient(circle at top left, rgba(214, 237, 247, 0.92), transparent 32%),
+    radial-gradient(circle at top right, rgba(248, 223, 228, 0.88), transparent 30%),
+    radial-gradient(circle at bottom center, rgba(245, 221, 233, 0.76), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(252, 238, 211, 0.72), transparent 24%),
+    linear-gradient(135deg, #edf5fb 0%, #f8f2f7 50%, #fbf7f2 100%);
+
+  --modal-header-bg: linear-gradient(90deg, rgba(219, 245, 249, 0.92), rgba(251, 229, 236, 0.92));
+
+  --transition-fast: 180ms ease;
+  --transition-medium: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  font-family: var(--font-body);
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--color-text);
+  background: var(--bg-page);
+  background-attachment: fixed;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  transition:
+    color var(--transition-medium),
+    background var(--transition-medium);
+}
+
+[data-theme='dark'] {
+  --color-primary: #8bafc8;
+  --color-primary-deep: #a3c4da;
+  --color-primary-light: #7a9db8;
+  --color-text: #c8d8e4;
+  --color-text-secondary: #8fa8bc;
+  --color-text-muted: #6d8599;
+  --color-text-faint: #7a92a6;
+  --color-text-strong: #dce8f0;
+
+  --color-bg-card: rgba(30, 40, 52, 0.82);
+  --color-bg-card-solid: rgba(28, 38, 50, 0.97);
+  --color-bg-input: #1a2636;
+  --color-bg-hover: rgba(40, 55, 72, 0.88);
+  --color-bg-section: rgba(24, 34, 46, 0.8);
+
+  --color-border: rgba(60, 80, 100, 0.5);
+  --color-border-row: rgba(80, 100, 120, 0.2);
+  --color-border-input: #2c3e50;
+  --color-border-dashed: #2c3e50;
+
+  --color-shadow: rgba(0, 0, 0, 0.25);
+  --color-shadow-button: rgba(0, 0, 0, 0.35);
+  --color-shadow-deep: rgba(0, 0, 0, 0.4);
+  --color-overlay: rgba(10, 16, 24, 0.6);
+
+  --color-tab-bg: rgba(30, 42, 56, 0.85);
+  --color-tab-active-bg: #5a8aaa;
+  --color-tab-active-text: #ffffff;
+  --color-tab-text: #8faabe;
+
+  --color-progress-track: #2a3a4c;
+  --color-progress-fill: #5a8aaa;
+  --color-progress-inner-bg: rgba(24, 34, 46, 0.96);
+
+  --color-badge-admin: #2a5c52;
+  --color-badge-member: #2a3a4c;
+  --color-status-active: #3ec96a;
+  --color-status-inactive: #4a5c6c;
+  --color-favorite: #e8b830;
+  --color-favorite-muted: #3a4c5c;
+  --color-error: #e07070;
+  --color-warning-bg: rgba(60, 42, 24, 0.8);
+  --color-warning-text: #d4a87c;
+  --color-info-bg: rgba(24, 34, 46, 0.7);
+  --color-delete-muted: #4a5c6c;
+
+  --color-pill-text: #9ab8cc;
+  --color-bar-track: #2a3a4c;
+
+  --bg-page:
+    radial-gradient(circle at top left, rgba(20, 50, 70, 0.6), transparent 32%),
+    radial-gradient(circle at top right, rgba(50, 25, 40, 0.5), transparent 30%),
+    radial-gradient(circle at bottom center, rgba(40, 20, 35, 0.4), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(45, 35, 20, 0.35), transparent 24%),
+    linear-gradient(135deg, #0f1923 0%, #141e2a 50%, #1a2230 100%);
+
+  --modal-header-bg: linear-gradient(90deg, rgba(20, 50, 60, 0.7), rgba(50, 25, 40, 0.7));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-body);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes progressGrow {
+  from { width: 0; }
+}
+
+@keyframes ringReveal {
+  from {
+    --progress-angle: 0deg;
+    opacity: 0.5;
+  }
+}

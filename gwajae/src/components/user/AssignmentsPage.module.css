@@ -1,0 +1,478 @@
+.library {
+  border-radius: 1.8rem;
+  background: var(--color-bg-card);
+  box-shadow:
+    0 18px 42px var(--color-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  padding: 1.1rem 1rem 0.8rem;
+  animation: fadeInUp 500ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  transition:
+    background var(--transition-medium),
+    box-shadow var(--transition-medium);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.title {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ghostButton,
+.primaryButton {
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.selectShell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: var(--color-bg-hover);
+  box-shadow: inset 0 0 0 1px var(--color-border);
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.selectShell::after {
+  content: 'v';
+  position: absolute;
+  right: 1rem;
+  color: var(--color-text);
+  pointer-events: none;
+}
+
+.selectShell select {
+  min-width: 10.5rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 2rem 0.8rem 1rem;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  appearance: none;
+  background: transparent;
+}
+
+.ghostButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--color-bg-hover);
+  box-shadow: inset 0 0 0 1px var(--color-border);
+}
+
+.ghostButton:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 0 1px var(--color-border),
+    0 4px 12px var(--color-shadow);
+}
+
+.primaryButton {
+  background: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 10px 24px var(--color-shadow-button);
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px var(--color-shadow-button);
+}
+
+.primaryButton:active {
+  transform: translateY(0);
+}
+
+.tableWrapper {
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  color: var(--color-text-faint);
+  font-size: 0.84rem;
+}
+
+.colPin {
+  width: 6%;
+}
+
+.colSubject {
+  width: 14%;
+}
+
+.colTitle {
+  width: 26%;
+}
+
+.colDueDate {
+  width: 20%;
+}
+
+.colSubmitted,
+.colLink,
+.colFiles,
+.colEdit,
+.colDelete {
+  width: 6.8%;
+}
+
+.table th,
+.table td {
+  padding: 1rem 0.55rem;
+  border-top: 1px solid var(--color-border-row);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table thead th {
+  padding-top: 0.6rem;
+  border-top: none;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.table tbody tr {
+  transition: background var(--transition-fast);
+}
+
+.table tbody tr:hover {
+  background: var(--color-bg-hover);
+}
+
+.subjectPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 6rem;
+  padding: 0.26rem 0.58rem;
+  border-radius: 999px;
+  color: var(--color-pill-text);
+  font-size: 0.69rem;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+
+.titleCell {
+  color: var(--color-text);
+  font-weight: 700;
+  line-height: 1.45;
+  word-break: keep-all;
+}
+
+.dateCell {
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+.statusButton {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.statusButton:hover {
+  transform: scale(1.15);
+}
+
+.statusCircle {
+  display: inline-grid;
+  place-items: center;
+  width: 1.28rem;
+  height: 1.28rem;
+  border: 1.5px solid var(--color-text-faint);
+  border-radius: 50%;
+  color: transparent;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.statusDone {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  font-size: 0.75rem;
+}
+
+.favoriteMuted,
+.favoriteActive,
+.editButton,
+.deleteButton {
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 999px;
+  line-height: 1;
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.favoriteMuted:hover,
+.favoriteActive:hover,
+.editButton:hover,
+.deleteButton:hover {
+  transform: scale(1.15);
+}
+
+.favoriteMuted {
+  color: var(--color-favorite-muted);
+}
+
+.favoriteActive {
+  color: var(--color-favorite);
+}
+
+.pinIcon,
+.editIcon {
+  width: 1.42rem;
+  height: 1.42rem;
+}
+
+.filesCell {
+  white-space: nowrap;
+}
+
+.editButton {
+  color: var(--color-text-faint);
+}
+
+.deleteButton {
+  color: var(--color-delete-muted);
+}
+
+.linkAnchor {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.helperInline {
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+
+.helperText,
+.errorText {
+  margin: 0 0 0.9rem;
+  font-size: 0.9rem;
+}
+
+.helperText {
+  color: var(--color-text-faint);
+}
+
+.errorText {
+  color: var(--color-error);
+}
+
+.emptyState {
+  color: var(--color-text-faint);
+  text-align: center;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.2rem;
+  background: var(--color-overlay);
+  backdrop-filter: blur(12px);
+  z-index: 35;
+  animation: fadeIn 250ms ease both;
+}
+
+.subjectModal {
+  width: min(100%, 24rem);
+  border-radius: 1.6rem;
+  background: var(--color-bg-card-solid);
+  box-shadow: 0 28px 80px var(--color-shadow-deep);
+  padding: 1.3rem;
+  animation: scaleIn 350ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.subjectModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.subjectModalTitle {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.closeButton {
+  border: none;
+  background: transparent;
+  color: var(--color-text-strong);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.closeButton:hover {
+  transform: scale(1.15);
+}
+
+.subjectField {
+  display: grid;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.subjectField span {
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.subjectField input {
+  width: 100%;
+  border: 1px solid var(--color-border-input);
+  border-radius: 0.95rem;
+  padding: 0.92rem 1rem;
+  box-sizing: border-box;
+  color: var(--color-text);
+  font: inherit;
+  background: var(--color-bg-input);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.subjectField input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(88, 113, 138, 0.15);
+}
+
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.colorSwatch {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 0.95rem;
+  box-shadow: inset 0 0 0 1px var(--color-border);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.colorSwatch:hover {
+  transform: scale(1.08);
+}
+
+.colorSwatchActive {
+  box-shadow:
+    inset 0 0 0 2px var(--color-primary),
+    0 8px 20px var(--color-shadow-button);
+  transform: scale(1.05);
+}
+
+.createSubjectButton {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 0.95rem 1.1rem;
+  background: var(--color-primary);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.createSubjectButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px var(--color-shadow-button);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 900px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .ghostButton,
+  .primaryButton,
+  .selectShell {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .selectShell select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 44rem;
+  }
+}
